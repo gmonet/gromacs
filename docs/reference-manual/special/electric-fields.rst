@@ -42,21 +42,21 @@ the :ref:`grompp <gmx grompp>` :ref:`mdp` file. You specify, in order, :math:`E_
 
 ::
 
-    electric-field-x = 0.04 0       0     0
+    electric-field-x = 0.04 0       0     0     0       0
 
 yields a static field with :math:`E_0` = 0.04 V/nm in the X-direction.
 In contrast,
 
 ::
 
-    electric-field-x = 2.0  150     5     0
+    electric-field-x = 2.0  150     5     0     0       0
 
 yields an oscillating electric field with :math:`E_0` = 2 V/nm,
 :math:`\omega` = 150/ps and :math:`t_0` = 5 ps. Finally
 
 ::
 
-    electric-field-x = 2.0  150     5     1
+    electric-field-x = 2.0  150     5     1     0       0
 
 yields an pulsed-oscillating electric field with :math:`E_0` = 2 V/nm,
 :math:`\omega` = 150/ps and :math:`t_0` = 5 ps and :math:`\sigma` = 1

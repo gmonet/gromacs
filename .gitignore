@@ -28,3 +28,10 @@ CMakeLists.txt.user
 Testing
 /.vs
 /CMakeSettings.json
+
+*.edr*
+*.log*
+*.trr*
+*.xtc*
+*.tpr*
+mdout.mdp

@@ -289,14 +289,29 @@ userreal1                = 0
 userreal2                = 0
 userreal3                = 0
 userreal4                = 0
+
 ; Electric fields
-; Format for electric-field-x, etc. is: four real variables:
-; amplitude (V/nm), frequency omega (1/ps), time for the pulse peak (ps),
-; and sigma (ps) width of the pulse. Omega = 0 means static field,
-; sigma = 0 means no pulse, leaving the field to be a cosine function.
-electric-field-x         = 0 0 0 0
-electric-field-y         = 3.7 2 6.5 1
-electric-field-z         = 0 0 0 0
+; Format for electric-field-x, etc. is: six real variables:
+; amplitude  (V/nm), frequency omega (1/ps), time for the pulse peak (ps),
+; width of the pulse sigma (ps), the lower z (nm) and highest z (nm) to consider.
+; Omega = 0 means static field,
+; sigma = 0 means no pulse, leaving the field to be a cosine function,
+; zmin=zmax means that the field is applied in whole system.
+electric-field-x         = 0 0 0 0 0 0
+electric-field-y         = 3.7 2 6.5 1 0 0
+electric-field-z         = 0 0 0 0 0 0
+
+; External force fields
+; Format for extforce-field-x, etc. is: six real variables:
+; amplitude (kJ/mol/nm), frequency omega (1/ps), time for the pulse peak (ps),
+; width of the pulse sigma (ps), the lower z (nm) and highest z (nm) to consider.
+; Omega = 0 means static field,
+; sigma = 0 means no pulse, leaving the field to be a cosine function,
+; zmin=zmax means that the field is applied in whole system.
+extforce-field-x         = 0 0 0 0 0 0
+extforce-field-y         = 0 0 0 0 0 0
+extforce-field-z         = 0 0 0 0 0 0
+
 
 ; Density guided simulation
 density-guided-simulation-active = false

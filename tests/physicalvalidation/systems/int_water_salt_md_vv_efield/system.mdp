@@ -1,0 +1,90 @@
+;;; VARIOUS PREPROCESSING OPTIONS
+; e.g.: -DPOSRES -DFLEXIBLE (note these variable names are case sensitive)
+define                   = 
+
+; -------------------------------------
+;;; RUN CONTROL PARAMETERS
+continuation            = no
+integrator              = md-vv
+dt                      = 0.001                  ; [0.001] ps
+nsteps                  = 1000000
+
+; number of steps for center of mass motion removal
+comm-mode               = None
+
+; -------------------------------------
+;;; OUTPUT CONTROL OPTIONS
+; Output frequency for coords (x), velocities (v) and forces (f)
+nstxout                 = 500         ; [100] save positions 
+nstvout                 = 500         ; [100] save velocities
+nstfout                 = 500         ; [100] save forces
+nstenergy               = 500         ; [100] save energies 
+nstlog                  = 1000                  ; update log file
+
+
+; Output frequency and precision for .xtc file
+nstxout-compressed       = 50    ; save coordinates
+compressed-x-precision   = 100000   
+
+; This selects the subset of atoms for the compressed
+; trajectory file. You can select multiple groups. By
+; default, all atoms will be written.
+compressed-x-grps        =       
+
+; -------------------------------------
+;;; NEIGHBORSEARCHING PARAMETERS
+; nblist cut-off
+cutoff-scheme           = Verlet
+rlist                   = 1.2                   ; [1]  Not clear in LAMMPS
+
+; -------------------------------------
+;;; OPTIONS FOR ELECTROSTATICS AND VDW
+; Method for doing vdw
+vdwtype                  = cutoff 
+rvdw                     = 1.2                  ; [1]  
+DispCorr                 = no
+
+; Method for doing electrostatics
+coulombtype              = PME                  ; [Cut-off] Particle Mesh Ewald for long-range electrostatics
+rcoulomb                 = 1.2                  ; [1]       short-range electrostatic cutoff (in nm)
+
+; EWALD/PME/PPPM parameters
+ewald-geometry           = 3d                   ; [3d] 
+
+; -------------------------------------
+;;; OPTIONS FOR BONDS 
+; Bond parameters
+constraints              = none
+constraint-algorithm     = SHAKE
+
+; -------------------------------------
+;;; OPTIONS FOR WEAK COUPLING ALGORITHMS
+; Temperature coupling  
+; following https://events.prace-ri.eu/event/868/sessions/2633/attachments/973/1608/gromacs_kth_prace_spring_school_2019.pdf
+tcoupl                  =  v-rescale
+
+tc-grps                 = System           ; two coupling groups - more accurate
+tau-t                   = 0.2               ; time constant, in ps
+ref-t                   = 300          ; reference temperature, one for each group, in K
+
+; Pressure coupling
+pcoupl                  = no                    ; no pressure coupling in NVT
+
+
+; -------------------------------------
+;;; GENERATE VELOCITIES FOR STARTUP RUN
+; Velocity generation
+gen_vel                 = yes             ; assign velocities from Maxwell distribution
+gen_temp                = 300                ; temperature for Maxwell distribution
+gen_seed                = 1                ; generate a random seedtitle 
+
+; Periodic boundary conditions
+pbc                     = xyz                   ; 3-D PBC
+periodic-molecules      = no
+
+
+; -------------------------------------
+;;; Electric fields
+electric-field-z        = 0 0 0 0 3.5 4.5
+extforce-field-z        = 1000 0 0 0 1.5 4.5
+user1-grps              = Ion

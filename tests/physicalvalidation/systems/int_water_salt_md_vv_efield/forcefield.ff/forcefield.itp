@@ -1,0 +1,21 @@
+; http://manual.gromacs.org/documentation/current/reference-manual/topologies/topology-file-formats.html
+[ defaults ]
+; nbfunc        comb-rule       gen-pairs       fudgeLJ fudgeQQ
+  1             2               yes             0.5     0.5
+; parameters are taken from the OPLS force field
+; nbfunc is the non-bonded function type. Use 1 (Lennard-Jones) or 2 (Buckingham). see http://manual.gromacs.org/documentation/current/reference-manual/functions/nonbonded-interactions.html
+; nbfunc = 1 => V_ij = C12_ij/r_ij^12  - C6_ij/r_ij^6 
+; comb-rule is the number of the combination rule (see Non-bonded parameters http://manual.gromacs.org/documentation/current/reference-manual/topologies/parameter-files.html#nbpar).
+; gen-pairs is for pair generation. The default is ‘no’, i.e. get 1-4 parameters from the pairtypes list. When parameters are not present in the list, stop with a fatal error. Setting ‘yes’ generates 1-4 parameters that are not present in the pair list from normal Lennard-Jones parameters using fudgeLJ
+; fudgeLJ is the factor by which to multiply Lennard-Jones 1-4 interactions, default 1
+; fudgeQQ is the factor by which to multiply electrostatic 1-4 interactions, default 1
+[ atomtypes ]
+; The charges here will be overwritten by those in other forcefield file
+; name  at.num  mass       charge  ptype   sigma[nm]      epsilon[kJ/mol]
+  OW    8       15.9994  -0.8476   A       3.166000E-01  6.500000E-01; [0.31660E+00   0.65000E+00]
+  HW    1       1.00794   0.4238   A       0.000000E+00  0.000000E+00; [0.00000E+00   0.00000E+00]
+  NA    11      22.989769  1.000   A       2.350000E-01  5.439000E-01; [0.23500E+00   0.51498E+00]
+  CL    17      35.453    -1.000   A       4.400000E-01  4.184000E-01; [0.44000E+00   0.41910E+00]
+
+[ nonbond_params ]
+; i   j   func  sigma_ij[nm]    epsilon_ij[kJ/mol]

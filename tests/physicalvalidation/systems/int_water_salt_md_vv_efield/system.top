@@ -1,0 +1,12 @@
+; Include forcefield parameters
+#include "./forcefield.ff/forcefield.itp"
+#include "./forcefield.ff/spce.itp"
+#include "./forcefield.ff/ions.itp"
+
+[ system ]
+Water box with salt
+
+[ molecules ]
+SOL 	1712
+NA  	31
+CL  	31

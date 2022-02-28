@@ -34,6 +34,7 @@
 
 gmx_add_libgromacs_sources(
     electricfield.cpp
+    extforcefield.cpp
     )
 
 add_subdirectory(awh)

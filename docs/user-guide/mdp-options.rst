@@ -3018,24 +3018,26 @@ Electric fields
 .. mdp:: electric-field-y
 .. mdp:: electric-field-z
 
-   Here you can specify an electric field that optionally can be
-   alternating and pulsed. The general expression for the field
-   has the form of a gaussian laser pulse:
+   Here you can specify an electric field defined in a region of space 
+   such as ``zmin < z < zmax`` and which can be alternating and pulsating. 
+   The general expression for the field has the form of a gaussian 
+   laser pulse:
 
-   .. math:: E(t) = E_0 \exp\left[-\frac{(t-t_0)^2}{2\sigma^2}\right]\cos\left[\omega (t-t_0)\right]
+   .. math:: E(t, z) = E_0 \exp\left[-\frac{(t-t_0)^2}{2\sigma^2}\right]\cos\left[\omega (t-t_0)\right] for z_{min} \; \neq z < z_{max},\; 0 \; else
 
    For example, the four parameters for direction x are set in the
    fields of :mdp:`electric-field-x` (and similar for ``electric-field-y``
    and ``electric-field-z``) like
 
-   ``electric-field-x  = E0 omega t0 sigma``
+   ``electric-field-x  = E0 omega t0 sigma zmin zmax``
 
-   with units (respectively) V nm\ :sup:`-1`, ps\ :sup:`-1`, ps, ps.
+   with units (respectively) V nm\ :sup:`-1`, ps\ :sup:`-1`, ps, ps, nm, nm.
 
    In the special case that ``sigma = 0``, the exponential term is omitted
    and only the cosine term is used. In this case, ``t0`` must be set to 0.
    If also ``omega = 0`` a static electric field is applied.
 
+   In the special caase that ``zmin=zmax``, the electric field is applied in whole system.
    Read more at :ref:`electric fields` and in ref. \ :ref:`146 <refCaleman2008a>`.
 
 

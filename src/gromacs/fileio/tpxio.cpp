@@ -123,6 +123,7 @@ enum tpxv
     tpxv_ReplacePullPrintCOM12,         /**< Replaced print-com-1, 2 with pull-print-com */
     tpxv_PullExternalPotential,         /**< Added pull type external potential */
     tpxv_GenericParamsForElectricField, /**< Introduced KeyValueTree and moved electric field parameters */
+    tpxv_GenericParamsForExtForceField, /**< Introduced KeyValueTree and moved ext force field parameters */
     tpxv_AcceleratedWeightHistogram, /**< sampling with accelerated weight histogram method (AWH) */
     tpxv_RemoveImplicitSolvation,    /**< removed support for implicit solvation */
     tpxv_PullPrevStepCOMAsReference, /**< Enabled using the COM of the pull group of the last frame as reference for PBC */
@@ -1018,17 +1019,20 @@ static void do_legacy_efield(gmx::ISerializer* serializer, gmx::KeyValueTreeObje
     // developing.
     for (int j = 0; j < DIM; ++j)
     {
-        int n, nt;
+        int n, nt, ny;
         serializer->doInt(&n);
         serializer->doInt(&nt);
-        std::vector<real> aa(n + 1), phi(nt + 1), at(nt + 1), phit(nt + 1);
-        serializer->doRealArray(aa.data(), n);
-        serializer->doRealArray(phi.data(), n);
+        serializer->doInt(&ny);
+        std::vector<real> aa(n + 1), phi(nt + 1), at(nt + 1), phit(nt + 1), ay(ny + 1), phiy(ny + 1);
+        serializer->doRealArray(aa.data(), n); // E0
+        serializer->doRealArray(phi.data(), n); //t0
         serializer->doRealArray(at.data(), nt);
         serializer->doRealArray(phit.data(), nt);
+        serializer->doRealArray(ay.data(), ny);
+        serializer->doRealArray(phiy.data(), ny);
         if (n > 0)
         {
-            if (n > 1 || nt > 1)
+            if (n > 1 || nt > 1 || ny > 1)
             {
                 gmx_fatal(FARGS,
                           "Can not handle tpr files with more than one electric field term per "
@@ -1039,10 +1043,52 @@ static void do_legacy_efield(gmx::ISerializer* serializer, gmx::KeyValueTreeObje
             dimObj.addValue<real>("omega", at[0]);
             dimObj.addValue<real>("t0", phi[0]);
             dimObj.addValue<real>("sigma", phit[0]);
+            dimObj.addValue<real>("zmin", ay[0]);
+            dimObj.addValue<real>("zmax", phiy[0]);
         }
     }
 }
 
+static void do_legacy_extforcefield(gmx::ISerializer* serializer, gmx::KeyValueTreeObjectBuilder* root)
+{
+    const char* const dimName[] = { "x", "y", "z" };
+
+    auto appliedForcesObj = root->addObject("applied-forces");
+    auto extforceObj        = appliedForcesObj.addObject("extforce-field");
+    // The content of the tpr file for this feature has
+    // been the same since gromacs 4.0 that was used for
+    // developing.
+    for (int j = 0; j < DIM; ++j)
+    {
+        int n, nt, ny;
+        serializer->doInt(&n);
+        serializer->doInt(&nt);
+        serializer->doInt(&ny);
+        std::vector<real> aa(n + 1), phi(nt + 1), at(nt + 1), phit(nt + 1), ay(ny + 1), phiy(ny + 1);
+        serializer->doRealArray(aa.data(), n); // E0
+        serializer->doRealArray(phi.data(), n); //t0
+        serializer->doRealArray(at.data(), nt);
+        serializer->doRealArray(phit.data(), nt);
+        serializer->doRealArray(ay.data(), ny);
+        serializer->doRealArray(phiy.data(), ny);
+        if (n > 0)
+        {
+            if (n > 1 || nt > 1 || ny > 1)
+            {
+                gmx_fatal(FARGS,
+                          "Can not handle tpr files with more than one electric field term per "
+                          "direction.");
+            }
+            auto dimObj = extforceObj.addObject(dimName[j]);
+            dimObj.addValue<real>("E0", aa[0]);
+            dimObj.addValue<real>("omega", at[0]);
+            dimObj.addValue<real>("t0", phi[0]);
+            dimObj.addValue<real>("sigma", phit[0]);
+            dimObj.addValue<real>("zmin", ay[0]);
+            dimObj.addValue<real>("zmax", phiy[0]);
+        }
+    }
+}
 
 static void do_inputrec(gmx::ISerializer* serializer, t_inputrec* ir, int file_version)
 {
@@ -1628,6 +1674,12 @@ static void do_inputrec(gmx::ISerializer* serializer, t_inputrec* ir, int file_v
         do_legacy_efield(serializer, &paramsObj);
     }
 
+    /* Cosine stuff for external force fields */
+    if (file_version < tpxv_GenericParamsForExtForceField)
+    {
+        do_legacy_extforcefield(serializer, &paramsObj);
+    }
+
     /* Swap ions */
     if (file_version >= tpxv_ComputationalElectrophysiology)
     {
@@ -1701,7 +1753,7 @@ static void do_inputrec(gmx::ISerializer* serializer, t_inputrec* ir, int file_v
         ir->params = new gmx::KeyValueTreeObject(paramsBuilder.build());
         // Initialize internal parameters to an empty kvt for all tpr versions
         ir->internalParameters = std::make_unique<gmx::KeyValueTreeObject>();
-    }
+    } // ?????
 
     if (file_version >= tpxv_GenericInternalParameters)
     {
