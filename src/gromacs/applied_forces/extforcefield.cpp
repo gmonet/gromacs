@@ -358,7 +358,7 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
             }
             
             // Sum up total mass for atoms such as zmin<=z<zmax
-            real mtot = 0; 
+            real mtot1 = 0; 
             for (int i = 0; i < mdatoms.homenr; ++i)
             {
                 // Skip atoms that do not belong to USER1 group (if one exists)
@@ -370,17 +370,17 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
                 // If zmin<zmax, include atoms that belong to this defined area
                 if (x[i][2] >= zmin && x[i][2] < zmax)
                 {
-                    mtot += mdatoms.massT[i];
+                    mtot1 += mdatoms.massT[i];
                 }
                 // If zmin==zmax, the force is applied on atoms without condition on their location 
                 else if (zmin == zmax)
                 {
-                    mtot += mdatoms.massT[i];
+                    mtot1 += mdatoms.massT[i];
                 }
             }
 
             // Assign forces to atoms
-            if (mtot != 0){
+            if (mtot1 != 0){
                 for (int i = 0; i < mdatoms.homenr; ++i)
                 {
                     // Skip atoms that do not belong to USER1 group (if one exists)
@@ -392,15 +392,59 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
                     // If zmin<zmax, include atoms that belong to this defined area
                     if (x[i][2] >= zmin && x[i][2] < zmax)
                     {
-                        f[i][m] += mdatoms.massT[i]*fieldStrength/mtot;
+                        f[i][m] += mdatoms.massT[i]*fieldStrength/mtot1;
                     }
                     // If zmin==zmax, the force is applied on atoms without condition on their location 
                     else if (zmin == zmax)
                     {
-                        f[i][m] += mdatoms.massT[i]*fieldStrength/mtot;
+                        f[i][m] += mdatoms.massT[i]*fieldStrength/mtot1;
                     }
                 }
             }
+
+            if (mdatoms.cU2!=NULL){
+                // Sum up total mass for atoms such as zmin<=z<zmax
+                real mtot2 = 0; 
+                for (int i = 0; i < mdatoms.homenr; ++i)
+                {
+                    // Skip atoms that do not belong to USER2 group
+                    if (mdatoms.cU2[i]!=0){
+                        continue;
+                    }
+                    // If zmin<zmax, include atoms that belong to this defined area
+                    if (x[i][2] >= zmin && x[i][2] < zmax)
+                    {
+                        mtot2 += mdatoms.massT[i];
+                    }
+                    // If zmin==zmax, the force is applied on atoms without condition on their location 
+                    else if (zmin == zmax)
+                    {
+                        mtot2 += mdatoms.massT[i];
+                    }
+                }
+
+                // Assign forces to atoms
+                if (mtot2 != 0){
+                    for (int i = 0; i < mdatoms.homenr; ++i)
+                    {
+                        // Skip atoms that do not belong to USER2 group
+                        if (mdatoms.cU2[i]!=0){
+                            continue;
+                        }
+                        // If zmin<zmax, include atoms that belong to this defined area
+                        if (x[i][2] >= zmin && x[i][2] < zmax)
+                        {
+                            f[i][m] += -mdatoms.massT[i]*fieldStrength/mtot2;
+                        }
+                        // If zmin==zmax, the force is applied on atoms without condition on their location 
+                        else if (zmin == zmax)
+                        {
+                            f[i][m] += -mdatoms.massT[i]*fieldStrength/mtot2;
+                        }
+                    }
+                }
+            }
+
         }
         if (MASTER(&cr) && fpField_ != nullptr)
         {
