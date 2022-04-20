@@ -58,7 +58,7 @@ user1-grps       = Ion
 ```
 extforce-field-z = 700 0 0 0 -1.5 2.5
 user1-grps       = Ion
-user1-grps       = Sol
+user2-grps       = Sol
 ```
 
 4. Apply a -0.1V/nm external electric field along z for <img src="https://render.githubusercontent.com/render/math?math=1.5 nm \leq z < 2.5 nm"> : 
