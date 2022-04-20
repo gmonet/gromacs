@@ -23,6 +23,7 @@ The syntax for adding an external force to a slice <img src="https://render.gith
  -  `zmax` is the highest value of z coordinate (nm) for which the field is applied (if `zmin` is equal to `zmax`, the force field is applied in whole simulation box).
 
 If you assign atoms to the atom group `USER1` then the external forcefield is applied to the atoms belonging to this group.
+If you assign atoms to the atom group `USER2` then an inverted external forcefield is applied to the atoms belonging to this group.
 
 ## Apply an external electric field on a slice of the simulation box
 
@@ -47,13 +48,20 @@ The syntax of the e-field-(xyz) parameters has been changed as follows:
 extforce-field-z = 700 0 0 0 -1.5 2.5 
 ```
 
-2. Apply a external force on the slice of the simulation box defined as <img src="https://render.githubusercontent.com/render/math?math=-1.5 nm \leq z < 2.5 nm">. The force is distributed to all **ions** belonging to this region.
+2. Apply a external force on the slice of the simulation box defined as <img src="https://render.githubusercontent.com/render/math?math=-1.5 nm \leq z < 2.5 nm">. The force <img src="https://render.githubusercontent.com/render/math?math=f"> is distributed on all atoms belonging to the group "Ion".
 ```
 extforce-field-z = 700 0 0 0 -1.5 2.5
 user1-grps       = Ion
 ```
 
-3. Apply a -0.1V/nm external electric field along z for <img src="https://render.githubusercontent.com/render/math?math=1.5 nm \leq z < 2.5 nm"> : 
+3. Apply a external force on the slice of the simulation box defined as <img src="https://render.githubusercontent.com/render/math?math=-1.5 nm \leq z < 2.5 nm">. The force <img src="https://render.githubusercontent.com/render/math?math=f"> is distributed on all atoms belonging to the group "Ion". Moreover, a force <img src="https://render.githubusercontent.com/render/math?math=-f"> is distributed on all atoms belonging to the group "Sol".
+```
+extforce-field-z = 700 0 0 0 -1.5 2.5
+user1-grps       = Ion
+user1-grps       = Sol
+```
+
+4. Apply a -0.1V/nm external electric field along z for <img src="https://render.githubusercontent.com/render/math?math=1.5 nm \leq z < 2.5 nm"> : 
 ```
 e-field-z = -0.1 0 0 0 1.5 2.5 
 ```
