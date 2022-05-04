@@ -356,9 +356,9 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
             {
                 continue;
             }
-            
-            // Sum up total mass for atoms such as zmin<=z<zmax
-            real mtot1 = 0; 
+
+            // Sum up total particles belonging to USER1 such as zmin<=z<zmax
+            int N1 = 0;
             for (int i = 0; i < mdatoms.homenr; ++i)
             {
                 // Skip atoms that do not belong to USER1 group (if one exists)
@@ -367,20 +367,21 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
                         continue;
                     }
                 }
+
                 // If zmin<zmax, include atoms that belong to this defined area
                 if (x[i][2] >= zmin && x[i][2] < zmax)
                 {
-                    mtot1 += mdatoms.massT[i];
+                    N1 += 1;
                 }
                 // If zmin==zmax, the force is applied on atoms without condition on their location 
                 else if (zmin == zmax)
                 {
-                    mtot1 += mdatoms.massT[i];
+                    N1 += 1;
                 }
             }
 
-            // Assign forces to atoms
-            if (mtot1 != 0){
+            // Assign forces particles belonging to USER1
+            if (N1 != 0){
                 for (int i = 0; i < mdatoms.homenr; ++i)
                 {
                     // Skip atoms that do not belong to USER1 group (if one exists)
@@ -392,39 +393,41 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
                     // If zmin<zmax, include atoms that belong to this defined area
                     if (x[i][2] >= zmin && x[i][2] < zmax)
                     {
-                        f[i][m] += mdatoms.massT[i]*fieldStrength/mtot1;
+                        f[i][m] += fieldStrength/N1;
                     }
                     // If zmin==zmax, the force is applied on atoms without condition on their location 
                     else if (zmin == zmax)
                     {
-                        f[i][m] += mdatoms.massT[i]*fieldStrength/mtot1;
+                        f[i][m] += fieldStrength/N1;
                     }
                 }
             }
 
+            // Counter-force
             if (mdatoms.cU2!=NULL){
-                // Sum up total mass for atoms such as zmin<=z<zmax
-                real mtot2 = 0; 
+                // Sum up total particles belonging to USER2 such as zmin<=z<zmax
+                int N2 = 0;
                 for (int i = 0; i < mdatoms.homenr; ++i)
                 {
-                    // Skip atoms that do not belong to USER2 group
+                    // Skip atoms that do not belong to USER1 group (if one exists)
                     if (mdatoms.cU2[i]!=0){
                         continue;
                     }
+
                     // If zmin<zmax, include atoms that belong to this defined area
                     if (x[i][2] >= zmin && x[i][2] < zmax)
                     {
-                        mtot2 += mdatoms.massT[i];
+                        N2 += 1;
                     }
                     // If zmin==zmax, the force is applied on atoms without condition on their location 
                     else if (zmin == zmax)
                     {
-                        mtot2 += mdatoms.massT[i];
+                        N2 += 1;
                     }
                 }
 
-                // Assign forces to atoms
-                if (mtot2 != 0){
+                // Assign forces to particles belonging to USER2
+                if (N2 != 0){
                     for (int i = 0; i < mdatoms.homenr; ++i)
                     {
                         // Skip atoms that do not belong to USER2 group
@@ -434,12 +437,12 @@ void ExtForceField::calculateForces(const ForceProviderInput& forceProviderInput
                         // If zmin<zmax, include atoms that belong to this defined area
                         if (x[i][2] >= zmin && x[i][2] < zmax)
                         {
-                            f[i][m] += -mdatoms.massT[i]*fieldStrength/mtot2;
+                            f[i][m] += -fieldStrength/N2;
                         }
                         // If zmin==zmax, the force is applied on atoms without condition on their location 
                         else if (zmin == zmax)
                         {
-                            f[i][m] += -mdatoms.massT[i]*fieldStrength/mtot2;
+                            f[i][m] += -fieldStrength/N2;
                         }
                     }
                 }

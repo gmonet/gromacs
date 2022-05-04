@@ -7,7 +7,7 @@ This version of Gromacs was forked from the release `release-2021` branch.
 
 It is now possible to apply a force <img src="https://render.githubusercontent.com/render/math?math=f"> on a slice <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> of the simulation box. This is equivalent to applying a pressure difference <img src="https://render.githubusercontent.com/render/math?math=\Delta P = f A"> on both sides of the slice <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> where <img src="https://render.githubusercontent.com/render/math?math=A"> is the slice cross-section.  
 The force is distributed between the atoms belonging to <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> such that for atom <img src="https://render.githubusercontent.com/render/math?math=i">,  
- <img src="https://render.githubusercontent.com/render/math?math=f_i=\frac{m_i f}{m_{tot}}">  
+ <img src="https://render.githubusercontent.com/render/math?math=f_i=\frac{f}{N_{tot}}">  
 
 The syntax for adding an external force to a slice <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> of the simulation box is similar to that used for adding an external electric field:
 
