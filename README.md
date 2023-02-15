@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/463182800.svg)](https://zenodo.org/badge/latestdoi/463182800)
+
 # Welcome to an **un**official version of GROMACS!
 This version of Gromacs was forked from the release `release-2021` branch.
 
