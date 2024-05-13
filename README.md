@@ -7,11 +7,11 @@ This version of Gromacs was forked from the release `release-2021` branch.
 
 ![Drag Racing](images/fext.png)
 
-It is now possible to apply a force <img src="https://render.githubusercontent.com/render/math?math=f"> on a slice <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> of the simulation box. This is equivalent to applying a pressure difference <img src="https://render.githubusercontent.com/render/math?math=\Delta P = f A"> on both sides of the slice <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> where <img src="https://render.githubusercontent.com/render/math?math=A"> is the slice cross-section.  
-The force is distributed between the atoms belonging to <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> such that for atom <img src="https://render.githubusercontent.com/render/math?math=i">,  
- <img src="https://render.githubusercontent.com/render/math?math=f_i=\frac{f}{N_{tot}}">  
+It is now possible to apply a force $f$ on a slice $\mathcal{S}$ of the simulation box. This is equivalent to applying a pressure difference $\Delta P = f A$ on both sides of the slice $\mathcal{S}$ where $A$ is the slice cross-section.  
+The force is distributed between the atoms belonging to $\mathcal{S}$ such that for atom $i$,  
+ $$f_i=\frac{f}{N_{tot}}$$ 
 
-The syntax for adding an external force to a slice <img src="https://render.githubusercontent.com/render/math?math=\mathcal{S}"> of the simulation box is similar to that used for adding an external electric field:
+The syntax for adding an external force to a slice $\mathcal{S}$ of the simulation box is similar to that used for adding an external electric field:
 
  ```
  extforce-field-z = f omega t0 sigma zmin zmax 
@@ -45,25 +45,25 @@ The syntax of the e-field-(xyz) parameters has been changed as follows:
  -  `zmax` is the highest value of z coordinate (nm) for which the field is applied (if `zmin` is equal to `zmax`, the force field is applied in whole simulation box).
 
 ## Some examples
-1. Apply a external force on the slice of the simulation box defined as <img src="https://render.githubusercontent.com/render/math?math=-1.5 nm \leq z < 2.5 nm">. The force is distributed to all the atoms belonging to this region.
+1. Apply a external force on the slice of the simulation box defined as $-1.5 nm \leq z < 2.5 nm$. The force is distributed to all the atoms belonging to this region.
 ```
 extforce-field-z = 700 0 0 0 -1.5 2.5 
 ```
 
-2. Apply a external force on the slice of the simulation box defined as <img src="https://render.githubusercontent.com/render/math?math=-1.5 nm \leq z < 2.5 nm">. The force <img src="https://render.githubusercontent.com/render/math?math=f"> is distributed on all atoms belonging to the group "Ion".
+2. Apply a external force on the slice of the simulation box defined as $-1.5 nm \leq z < 2.5 nm$. The force $f$ is distributed on all atoms belonging to the group "Ion".
 ```
 extforce-field-z = 700 0 0 0 -1.5 2.5
 user1-grps       = Ion
 ```
 
-3. Apply a external force on the slice of the simulation box defined as <img src="https://render.githubusercontent.com/render/math?math=-1.5 nm \leq z < 2.5 nm">. The force <img src="https://render.githubusercontent.com/render/math?math=f"> is distributed on all atoms belonging to the group "Ion". Moreover, a force <img src="https://render.githubusercontent.com/render/math?math=-f"> is distributed on all atoms belonging to the group "Sol".
+3. Apply a external force on the slice of the simulation box defined as $-1.5 nm \leq z < 2.5 nm$. The force $f$ is distributed on all atoms belonging to the group "Ion". Moreover, a force $-f$ is distributed on all atoms belonging to the group "Sol".
 ```
 extforce-field-z = 700 0 0 0 -1.5 2.5
 user1-grps       = Ion
 user2-grps       = Sol
 ```
 
-4. Apply a -0.1V/nm external electric field along z for <img src="https://render.githubusercontent.com/render/math?math=1.5 nm \leq z < 2.5 nm"> : 
+4. Apply a -0.1V/nm external electric field along z for $1.5 nm \leq z < 2.5 nm$ : 
 ```
 e-field-z = -0.1 0 0 0 1.5 2.5 
 ```
